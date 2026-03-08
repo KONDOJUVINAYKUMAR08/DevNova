@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
+
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: #0f0f1a;
+    color: #e8e6e3;
+    overflow-x: hidden;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', serif;
+  }
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: #1a1a2e; }
+  ::-webkit-scrollbar-thumb { background: #d4881c; border-radius: 4px; }
+}
+
+@layer components {
+  .btn-gold {
+    @apply px-6 py-3 bg-gradient-to-r from-gold-500 to-gold-600 text-white font-semibold rounded-lg 
+    hover:from-gold-600 hover:to-gold-700 transition-all duration-300 transform hover:scale-105 
+    shadow-lg hover:shadow-gold-500/25;
+  }
+  .btn-outline-gold {
+    @apply px-6 py-3 border-2 border-gold-500 text-gold-400 font-semibold rounded-lg 
+    hover:bg-gold-500 hover:text-white transition-all duration-300;
+  }
+  .card-luxury {
+    @apply bg-gradient-to-br from-luxury-dark to-luxury-navy rounded-2xl border border-gold-900/30 
+    shadow-xl hover:shadow-gold-500/10 transition-all duration-500 overflow-hidden;
+  }
+  .card-product {
+    @apply bg-gradient-to-br from-[#1e1e35] to-[#15152a] rounded-2xl border border-gold-900/20 
+    overflow-hidden hover:border-gold-500/40 transition-all duration-500 
+    hover:shadow-xl hover:shadow-gold-900/20 hover:-translate-y-1;
+  }
+  .glass {
+    @apply bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl;
+  }
+  .input-luxury {
+    @apply w-full px-4 py-3 bg-luxury-dark/50 border border-gold-900/30 rounded-lg text-white 
+    placeholder-gray-500 focus:outline-none focus:border-gold-500 focus:ring-1 focus:ring-gold-500/50 
+    transition-all duration-300;
+  }
+  .badge-gold {
+    @apply inline-block px-3 py-1 text-xs font-semibold bg-gold-500/20 text-gold-400 rounded-full;
+  }
+  .section-title {
+    @apply text-3xl md:text-4xl font-bold text-center mb-4 bg-gradient-to-r from-gold-400 to-gold-600 
+    bg-clip-text text-transparent;
+  }
+  .shimmer-bg {
+    background: linear-gradient(110deg, transparent 33%, rgba(255, 215, 0, 0.08) 50%, transparent 67%);
+    background-size: 200% 100%;
+    animation: shimmer 2s linear infinite;
+  }
+}
