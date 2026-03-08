@@ -1,0 +1,197 @@
+version: '3.8'
+
+services:
+  # ========================
+  # API Gateway (Nginx)
+  # ========================
+  api-gateway:
+    build: ./backend/api-gateway
+    container_name: jewellery-api-gateway
+    ports:
+      - "80:80"
+    depends_on:
+      - frontend
+      - user-service
+      - product-service
+      - rate-service
+      - order-service
+      - review-service
+      - admin-service
+    networks:
+      - frontend-network
+      - backend-network
+    restart: unless-stopped
+
+  # ========================
+  # Frontend (Next.js)
+  # ========================
+  frontend:
+    build: ./frontend
+    container_name: jewellery-frontend
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost
+    networks:
+      - frontend-network
+    restart: unless-stopped
+
+  # ========================
+  # User Service
+  # ========================
+  user-service:
+    build: ./backend/user-service
+    container_name: jewellery-user-service
+    environment:
+      - PORT=4001
+      - MONGO_URI=mongodb://user-db:27017/jewellery-users
+      - JWT_SECRET=${JWT_SECRET}
+    depends_on:
+      - user-db
+    networks:
+      - backend-network
+    restart: unless-stopped
+
+  user-db:
+    image: mongo:7
+    container_name: jewellery-user-db
+    volumes:
+      - user-data:/data/db
+    networks:
+      - backend-network
+    restart: unless-stopped
+
+  # ========================
+  # Product Service
+  # ========================
+  product-service:
+    build: ./backend/product-service
+    container_name: jewellery-product-service
+    environment:
+      - PORT=4002
+      - MONGO_URI=mongodb://product-db:27017/jewellery-products
+      - JWT_SECRET=${JWT_SECRET}
+    depends_on:
+      - product-db
+    networks:
+      - backend-network
+    restart: unless-stopped
+
+  product-db:
+    image: mongo:7
+    container_name: jewellery-product-db
+    volumes:
+      - product-data:/data/db
+    networks:
+      - backend-network
+    restart: unless-stopped
+
+  # ========================
+  # Rate Service
+  # ========================
+  rate-service:
+    build: ./backend/rate-service
+    container_name: jewellery-rate-service
+    environment:
+      - PORT=4003
+      - MONGO_URI=mongodb://rate-db:27017/jewellery-rates
+      - JWT_SECRET=${JWT_SECRET}
+    depends_on:
+      - rate-db
+    networks:
+      - backend-network
+    restart: unless-stopped
+
+  rate-db:
+    image: mongo:7
+    container_name: jewellery-rate-db
+    volumes:
+      - rate-data:/data/db
+    networks:
+      - backend-network
+    restart: unless-stopped
+
+  # ========================
+  # Order Service
+  # ========================
+  order-service:
+    build: ./backend/order-service
+    container_name: jewellery-order-service
+    environment:
+      - PORT=4004
+      - MONGO_URI=mongodb://order-db:27017/jewellery-orders
+      - JWT_SECRET=${JWT_SECRET}
+    depends_on:
+      - order-db
+    networks:
+      - backend-network
+    restart: unless-stopped
+
+  order-db:
+    image: mongo:7
+    container_name: jewellery-order-db
+    volumes:
+      - order-data:/data/db
+    networks:
+      - backend-network
+    restart: unless-stopped
+
+  # ========================
+  # Review Service
+  # ========================
+  review-service:
+    build: ./backend/review-service
+    container_name: jewellery-review-service
+    environment:
+      - PORT=4005
+      - MONGO_URI=mongodb://review-db:27017/jewellery-reviews
+      - JWT_SECRET=${JWT_SECRET}
+    depends_on:
+      - review-db
+    networks:
+      - backend-network
+    restart: unless-stopped
+
+  review-db:
+    image: mongo:7
+    container_name: jewellery-review-db
+    volumes:
+      - review-data:/data/db
+    networks:
+      - backend-network
+    restart: unless-stopped
+
+  # ========================
+  # Admin Service
+  # ========================
+  admin-service:
+    build: ./backend/admin-service
+    container_name: jewellery-admin-service
+    environment:
+      - PORT=4006
+      - JWT_SECRET=${JWT_SECRET}
+      - USER_SERVICE_URL=http://user-service:4001
+      - PRODUCT_SERVICE_URL=http://product-service:4002
+      - RATE_SERVICE_URL=http://rate-service:4003
+      - ORDER_SERVICE_URL=http://order-service:4004
+      - REVIEW_SERVICE_URL=http://review-service:4005
+    networks:
+      - backend-network
+    restart: unless-stopped
+
+# ========================
+# Networks
+# ========================
+networks:
+  frontend-network:
+    driver: bridge
+  backend-network:
+    driver: bridge
+
+# ========================
+# Volumes
+# ========================
+volumes:
+  user-data:
+  product-data:
+  rate-data:
+  order-data:
+  review-data:
